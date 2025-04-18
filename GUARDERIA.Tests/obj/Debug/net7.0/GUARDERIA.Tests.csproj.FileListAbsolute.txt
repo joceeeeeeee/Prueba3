@@ -1,0 +1,5 @@
+C:\Users\DELL\Desktop\GUARDERIA\GUARDERIA.Tests\obj\Debug\net7.0\GUARDERIA.Tests.csproj.AssemblyReference.cache
+C:\Users\DELL\Desktop\GUARDERIA\GUARDERIA.Tests\obj\Debug\net7.0\GUARDERIA.Tests.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\DELL\Desktop\GUARDERIA\GUARDERIA.Tests\obj\Debug\net7.0\GUARDERIA.Tests.AssemblyInfoInputs.cache
+C:\Users\DELL\Desktop\GUARDERIA\GUARDERIA.Tests\obj\Debug\net7.0\GUARDERIA.Tests.AssemblyInfo.cs
+C:\Users\DELL\Desktop\GUARDERIA\GUARDERIA.Tests\obj\Debug\net7.0\GUARDERIA.Tests.csproj.CoreCompileInputs.cache

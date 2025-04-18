@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "dgSpecHash": "F1kGsSffiSDTJ9a/hgGYKkj36u1lwUd6SpQmg4oo31KNu6e80aC0vRTef/TsD3nBhlVmFLtB/entRvJHtY4F6g==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\DELL\\Desktop\\GUARDERIA\\GUARDERIA\\TestProject2\\TestProject2.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\DELL\\.nuget\\packages\\microsoft.codecoverage\\15.8.0\\microsoft.codecoverage.15.8.0.nupkg.sha512",
+    "C:\\Users\\DELL\\.nuget\\packages\\microsoft.net.test.sdk\\15.8.0\\microsoft.net.test.sdk.15.8.0.nupkg.sha512",
+    "C:\\Users\\DELL\\.nuget\\packages\\microsoft.netframework.referenceassemblies\\1.0.3\\microsoft.netframework.referenceassemblies.1.0.3.nupkg.sha512",
+    "C:\\Users\\DELL\\.nuget\\packages\\microsoft.netframework.referenceassemblies.net481\\1.0.3\\microsoft.netframework.referenceassemblies.net481.1.0.3.nupkg.sha512",
+    "C:\\Users\\DELL\\.nuget\\packages\\nunit\\3.10.1\\nunit.3.10.1.nupkg.sha512",
+    "C:\\Users\\DELL\\.nuget\\packages\\nunit3testadapter\\3.10.0\\nunit3testadapter.3.10.0.nupkg.sha512"
+  ],
+  "logs": []
+}
