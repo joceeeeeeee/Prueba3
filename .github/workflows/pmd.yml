@@ -3,24 +3,18 @@ name: PMD Setup and Analysis
 on:
   push:
     branches:
-      - '**'  # Esto asegura que se ejecute en cada commit, sin importar la rama
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   setup:
     runs-on: ubuntu-latest
-
     steps:
-      # Paso 1: Verificar el repositorio
       - name: Check out repository
         uses: actions/checkout@v2
 
-      # Paso 2: Configurar Java (necesario para PMD)
-      - name: Set up Java
-        uses: actions/setup-java@v2
-        with:
-          java-version: '11'  # Puedes ajustar esta versión según tu necesidad
-
-      # Paso 3: Descomprimir archivo PMD
       - name: Descomprimir archivo PMD
         run: |
           mkdir -p ~/pmd
@@ -28,14 +22,7 @@ jobs:
           cd ~/pmd
           unzip pmd-dist-7.12.0-bin.zip
 
-      # Paso 4: Verificar la instalación de PMD
       - name: Verificar instalación de PMD
         run: |
           cd ~/pmd/pmd-bin-7.12.0/bin
           ./pmd --version
-
-      # Paso 5: Ejecutar el análisis PMD
-      - name: Ejecutar análisis PMD
-        run: |
-          cd ~/pmd/pmd-bin-7.12.0/bin
-          ./pmd -d ../path/to/your/source/code -R rulesets/java/quickstart.xml -f text
