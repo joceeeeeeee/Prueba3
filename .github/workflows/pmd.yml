@@ -32,8 +32,8 @@ jobs:
           cd ~/pmd/pmd-bin-7.12.0/bin
           ./pmd -d ../path/to/your/source/code -R rulesets/java/quickstart.xml -f text > ~/pmd-analysis-report.txt
           
-      - name: Subir el resultado del análisis
-        uses: actions/upload-artifact@v2
+      - name: Upload PMD analysis results
+        uses: actions/upload-artifact@v4
         with:
-          name: pmd-analysis-report
-          path: ~/pmd-analysis-report.txt
+          name: pmd-results
+          path: ~/pmd/pmd-bin-7.12.0/bin
