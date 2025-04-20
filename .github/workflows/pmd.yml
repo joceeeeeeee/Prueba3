@@ -1,0 +1,28 @@
+name: PMD Setup and Analysis
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+
+      - name: Descomprimir archivo PMD
+        run: |
+          mkdir -p ~/pmd
+          cp .github/assets/pmd/pmd-dist-7.12.0-bin.zip ~/pmd/
+          cd ~/pmd
+          unzip pmd-dist-7.12.0-bin.zip
+
+      - name: Verificar instalación de PMD
+        run: |
+          cd ~/pmd/pmd-bin-7.12.0/bin
+          ./pmd --version
