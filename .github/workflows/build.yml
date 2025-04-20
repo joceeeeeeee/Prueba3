@@ -18,14 +18,13 @@ jobs:
       with:
         dotnet-version: '6.x'
 
-    - name: Install SonarCloud scanner
+    - name: Install SonarCloud scanner for .NET
       run: |
-        curl -sSLo sonar-scanner.zip https://github.com/SonarSource/sonar-scanner-cli/releases/download/4.6.2.2472/sonar-scanner-cli-4.6.2.2472-linux.zip
-        unzip sonar-scanner.zip -d .sonar
+        dotnet tool install --global dotnet-sonarscanner
 
     - name: Begin SonarCloud Analysis
       run: |
-        .\.sonar\sonar-scanner-4.6.2.2472\bin\sonar-scanner.bat -Dsonar.projectKey=Pruebas-Sonarqube_prueba-ex -Dsonar.organization=pruebas-sonarqube -Dsonar.login=${{ secrets.SONAR_TOKEN }} -Dsonar.host.url=https://sonarcloud.io
+        dotnet sonarscanner begin /k:"Pruebas-Sonarqube_prueba-ex" /o:"pruebas-sonarqube" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
 
     - name: Build with MSBuild
       run: |
@@ -33,4 +32,4 @@ jobs:
 
     - name: End SonarCloud Analysis
       run: |
-        .\.sonar\sonar-scanner-4.6.2.2472\bin\sonar-scanner.bat -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+        dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
