@@ -1,7 +1,10 @@
-name: Build and Analyze with SonarCloud
+name: .NET Core CI
 
 on:
   push:
+    branches:
+      - main
+  pull_request:
     branches:
       - main
 
@@ -16,20 +19,16 @@ jobs:
     - name: Set up .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: '6.x'
+        dotnet-version: '6.0'
 
-    - name: Install SonarCloud scanner for .NET
-      run: |
-        dotnet tool install --global dotnet-sonarscanner
+    - name: Restore dependencies
+      run: dotnet restore
 
-    - name: Begin SonarCloud Analysis
-      run: |
-        dotnet sonarscanner begin /k:"Pruebas-Sonarqube_prueba-ex" /o:"pruebas-sonarqube" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
+    - name: Build project
+      run: dotnet build --configuration Release
 
-    - name: Build with MSBuild
-      run: |
-        dotnet build YourSolution.sln
+    - name: Run tests
+      run: dotnet test --configuration Release --no-build --verbosity normal
 
-    - name: End SonarCloud Analysis
-      run: |
-        dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+    - name: Publish the project
+      run: dotnet publish --configuration Release --no-build --output ./publish
