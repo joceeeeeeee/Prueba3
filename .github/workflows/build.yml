@@ -1,23 +1,36 @@
-name: SonarCloud Analysis
+name: Build and Analyze with SonarCloud
 
 on:
   push:
     branches:
-      - main  # Cambia a la rama que estés usando, si no es 'main'
+      - main
 
 jobs:
-  sonarcloud:
-    runs-on: windows-latest  # Puedes cambiar a otra versión de Windows si es necesario
-    
-    steps:
-      - name: Check out the code
-        uses: actions/checkout@v4
-        
-      - name: Set up SonarCloud
-        uses: SonarSource/sonarcloud-github-action@v1
+  build:
+    runs-on: windows-latest
 
-      - name: Run SonarScanner
-        run: |
-          dotnet-sonarscanner begin /k:"Pruebas-Sonarqube_prueba-ex" /o:"pruebas-sonarqube" /d:sonar.host.url="https://sonarcloud.io"
-          dotnet build GUARDERIA.sln
-          dotnet-sonarscanner end
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '6.x'
+
+    - name: Install SonarCloud scanner
+      run: |
+        curl -sSLo sonar-scanner.zip https://github.com/SonarSource/sonar-scanner-cli/releases/download/4.6.2.2472/sonar-scanner-cli-4.6.2.2472-linux.zip
+        unzip sonar-scanner.zip -d .sonar
+
+    - name: Begin SonarCloud Analysis
+      run: |
+        .\.sonar\sonar-scanner-4.6.2.2472\bin\sonar-scanner.bat -Dsonar.projectKey=Pruebas-Sonarqube_prueba-ex -Dsonar.organization=pruebas-sonarqube -Dsonar.login=${{ secrets.SONAR_TOKEN }} -Dsonar.host.url=https://sonarcloud.io
+
+    - name: Build with MSBuild
+      run: |
+        dotnet build YourSolution.sln
+
+    - name: End SonarCloud Analysis
+      run: |
+        .\.sonar\sonar-scanner-4.6.2.2472\bin\sonar-scanner.bat -Dsonar.login=${{ secrets.SONAR_TOKEN }}
