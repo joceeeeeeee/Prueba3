@@ -1,34 +1,33 @@
-name: .NET Core CI
+name: PMD Analysis
 
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+on: [push, pull_request]
 
 jobs:
-  build:
+  pmd:
     runs-on: windows-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+      # 1. Checkout repository
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-    - name: Set up .NET Core
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: '6.0'
+      # 2. Descargar y descomprimir PMD
+      - name: Set up PMD
+        run: |
+          # Descargar PMD si no está presente
+          curl -L https://github.com/pmd/pmd/releases/download/pmd_releases-7.12.0/pmd-bin-7.12.0.zip -o pmd.zip
+          unzip pmd.zip -d pmd
+          echo "PMD extracted"
 
-    - name: Restore dependencies
-      run: dotnet restore ./GUARDERIA.sln  # Especifica la ruta del archivo .sln
+      # 3. Ejecutar el análisis PMD
+      - name: Run PMD Analysis
+        run: |
+          cd pmd/pmd-bin-7.12.0/bin
+          .\pmd.bat -d ..\..\src -R rulesets/java/quickstart.xml -f html -o pmd-report.html
 
-    - name: Build project
-      run: dotnet build ./GUARDERIA.sln --configuration Release
-
-    - name: Run tests
-      run: dotnet test ./GUARDERIA.sln --configuration Release --no-build --verbosity normal
-
-    - name: Publish the project
-      run: dotnet publish ./GUARDERIA.sln --configuration Release --no-build --output ./publish
+      # 4. Subir el reporte de PMD como un artefacto
+      - name: Upload PMD report as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: pmd-report
+          path: pmd-report.html
