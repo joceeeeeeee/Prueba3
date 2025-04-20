@@ -1,32 +1,24 @@
 name: PMD Analysis
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - main
 
 jobs:
-  pmd:
-    runs-on: windows-latest
-
+  pmd-analysis:
+    runs-on: ubuntu-latest
     steps:
-      # Checkout the code
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v2
 
-      # Descargar y descomprimir PMD
-      - name: Set up PMD
+      - name: Download PMD from GitHub repository
         run: |
-          curl -L https://github.com/pmd/pmd/releases/download/pmd_releases-7.12.0/pmd-bin-7.12.0.zip -o pmd.zip
+          # Descarga el archivo ZIP de PMD desde el repositorio
+          wget https://github.com/yourusername/yourrepo/raw/main/assets/pmd/pmd-bin-7.12.0.zip -O pmd.zip
           unzip pmd.zip -d pmd
-          echo "PMD extracted"
 
-      # Ejecutar análisis PMD
-      - name: Run PMD Analysis
+      - name: Run PMD analysis
         run: |
-          cd pmd/pmd-bin-7.12.0/bin
-          .\pmd.bat -d ..\..\src -R rulesets/java/quickstart.xml -f html -o pmd-report.html
-
-      # Subir el reporte de PMD como artefacto
-      - name: Upload PMD report as artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: pmd-report
-          path: pmd-report.html
+          cd pmd
+          ./bin/pmd -d ../ -R rulesets/java/quickstart.xml -f text
