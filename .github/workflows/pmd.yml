@@ -27,13 +27,7 @@ jobs:
           cd ~/pmd/pmd-bin-7.12.0/bin
           ./pmd --version
 
-      - name: Ejecutar análisis de código con PMD
+      - name: Ejecutar PMD sobre el código fuente
         run: |
           cd ~/pmd/pmd-bin-7.12.0/bin
-          ./pmd -d ~/Desktop/GUARDERIA/src -R ~/pmd/pmd-bin-7.12.0/rulesets/java/quickstart.xml -f text > pmd-results.txt
-          
-      - name: Subir resultados del análisis
-        uses: actions/upload-artifact@v4
-        with:
-          name: pmd-analysis-results
-          path: pmd-results.txt
+          ./pmd -d ../GUARDERIA/ -R rulesets/csharp/quickstart.xml -f text
