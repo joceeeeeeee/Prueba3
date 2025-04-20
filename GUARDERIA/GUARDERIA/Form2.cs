@@ -166,6 +166,8 @@ namespace GUARDERIA
 
         private void btneliminar_Click(object sender, EventArgs e)
         {
+            //prueba
+
             conexion.Open();
             string baja = "DELETE FROM EMPLEADO WHERE ID_EMPLEADO=@ID_EMPLEADO";
 
