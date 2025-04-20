@@ -7,27 +7,26 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      # 1. Checkout repository
+      # Checkout the code
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      # 2. Descargar y descomprimir PMD
+      # Descargar y descomprimir PMD
       - name: Set up PMD
         run: |
-          # Descargar PMD si no está presente
           curl -L https://github.com/pmd/pmd/releases/download/pmd_releases-7.12.0/pmd-bin-7.12.0.zip -o pmd.zip
           unzip pmd.zip -d pmd
           echo "PMD extracted"
 
-      # 3. Ejecutar el análisis PMD
+      # Ejecutar análisis PMD
       - name: Run PMD Analysis
         run: |
           cd pmd/pmd-bin-7.12.0/bin
           .\pmd.bat -d ..\..\src -R rulesets/java/quickstart.xml -f html -o pmd-report.html
 
-      # 4. Subir el reporte de PMD como un artefacto
+      # Subir el reporte de PMD como artefacto
       - name: Upload PMD report as artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: pmd-report
           path: pmd-report.html
