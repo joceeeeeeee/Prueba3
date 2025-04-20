@@ -1,55 +1,23 @@
-name: SonarQube
+name: SonarCloud Analysis
 
 on:
   push:
     branches:
-      - main
-  pull_request:
-    types: [opened, synchronize, reopened]
+      - main  # Cambia a la rama que estés usando, si no es 'main'
 
 jobs:
-  build:
-    name: Build and analyze
-    runs-on: windows-latest
+  sonarcloud:
+    runs-on: windows-latest  # Puedes cambiar a otra versión de Windows si es necesario
+    
     steps:
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
-        with:
-          java-version: 17
-          distribution: 'zulu'
-
-      - name: Checkout code
+      - name: Check out the code
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+        
+      - name: Set up SonarCloud
+        uses: SonarSource/sonarcloud-github-action@v1
 
-      - name: Cache SonarCloud packages
-        uses: actions/cache@v4
-        with:
-          path: ~\sonar\cache
-          key: ${{ runner.os }}-sonar
-          restore-keys: ${{ runner.os }}-sonar
-
-      - name: Cache SonarCloud scanner
-        id: cache-sonar-scanner
-        uses: actions/cache@v4
-        with:
-          path: .\.sonar\scanner
-          key: ${{ runner.os }}-sonar-scanner
-          restore-keys: ${{ runner.os }}-sonar-scanner
-
-      - name: Install SonarCloud scanner
-        if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
-        shell: powershell
+      - name: Run SonarScanner
         run: |
-          New-Item -Path .\.sonar\scanner -ItemType Directory -Force
-          dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
-
-      - name: Build and analyze
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        shell: powershell
-        run: |
-          .\.sonar\scanner\dotnet-sonarscanner begin /k:"Pruebas-Sonarqube_prueba-ex" /o:"pruebas-sonarqube" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
-          dotnet build "GUARDERIA.sln"
-          .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+          dotnet-sonarscanner begin /k:"Pruebas-Sonarqube_prueba-ex" /o:"pruebas-sonarqube" /d:sonar.host.url="https://sonarcloud.io"
+          dotnet build GUARDERIA.sln
+          dotnet-sonarscanner end
