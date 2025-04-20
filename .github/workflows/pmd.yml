@@ -27,6 +27,7 @@ jobs:
           cd ~/pmd/pmd-bin-7.12.0/bin
           ./pmd --version
 
+
       - name: Ejecutar análisis de código con PMD
         run: |
           cd ~/pmd/pmd-bin-7.12.0/bin
