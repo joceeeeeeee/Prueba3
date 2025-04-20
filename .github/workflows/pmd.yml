@@ -1,28 +1,29 @@
-name: PMD Setup and Analysis
+name: PMD Static Analysis
 
 on:
   push:
     branches:
-      - main
-  pull_request:
-    branches:
-      - main
+      - '*'  # Esto hará que el flujo de trabajo se ejecute en cualquier rama
 
 jobs:
-  setup:
+  pmd:
     runs-on: ubuntu-latest
+
     steps:
       - name: Check out repository
         uses: actions/checkout@v2
 
-      - name: Descomprimir archivo PMD
+      - name: Set up Java
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'  # Asegúrate de usar una versión compatible con PMD
+
+      - name: Install PMD
         run: |
           mkdir -p ~/pmd
-          cp .github/assets/pmd/pmd-dist-7.12.0-bin.zip ~/pmd/
-          cd ~/pmd
-          unzip pmd-dist-7.12.0-bin.zip
+          unzip pmd-dist-7.12.0-bin.zip -d ~/pmd
+          echo "$HOME/pmd/pmd-bin-7.12.0/bin" >> $GITHUB_PATH
 
-      - name: Verificar instalación de PMD
+      - name: Run PMD
         run: |
-          cd ~/pmd/pmd-bin-7.12.0/bin
-          ./pmd --version
+          ~/pmd/pmd-bin-7.12.0/bin/run.sh pmd -d ./src -R rulesets/java/quickstart.xml -f text
