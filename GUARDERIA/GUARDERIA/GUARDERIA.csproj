@@ -319,6 +319,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>DatTUTOR.xsd</DependentUpon>
     </Compile>
+    <Compile Include="EmpleadoRepository.cs" />
     <Compile Include="EXPEDATA.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -354,9 +355,7 @@
     <Compile Include="Form2.Designer.cs">
       <DependentUpon>Form2.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form4.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="Form4.cs" />
     <Compile Include="Form4.Designer.cs">
       <DependentUpon>Form4.cs</DependentUpon>
     </Compile>
@@ -420,8 +419,10 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>GUARDERIADataSet9.xsd</DependentUpon>
     </Compile>
+    <Compile Include="ITutorRepository.cs.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TutorRepository.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>

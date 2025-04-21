@@ -96,7 +96,7 @@ namespace GUARDERIA
             SqlCommand cmdIns = new SqlCommand(baja, conexion);
 
 
-            cmdIns.Parameters.Add("ID_SALON", txtcodigo.Text);
+            cmdIns.Parameters.AddWithValue("ID_SALON", txtcodigo.Text);
 
 
             cmdIns.ExecuteNonQuery();

@@ -5,6 +5,8 @@ VisualStudioVersion = 17.3.32825.248
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GUARDERIA", "GUARDERIA\GUARDERIA.csproj", "{D683085F-2447-462A-B83B-A835E4C40FC0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GUARDERIAtest", "GUARDERIAtest\GUARDERIAtest.csproj", "{96306047-4967-4AC7-B942-50E7A9BB74EF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{D683085F-2447-462A-B83B-A835E4C40FC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D683085F-2447-462A-B83B-A835E4C40FC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D683085F-2447-462A-B83B-A835E4C40FC0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{96306047-4967-4AC7-B942-50E7A9BB74EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{96306047-4967-4AC7-B942-50E7A9BB74EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{96306047-4967-4AC7-B942-50E7A9BB74EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{96306047-4967-4AC7-B942-50E7A9BB74EF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

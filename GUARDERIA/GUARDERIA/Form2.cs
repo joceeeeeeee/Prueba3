@@ -13,6 +13,7 @@ namespace GUARDERIA
 {
     public partial class Form2 : Form
     {
+
         public void InsertarEmpleado(string codigo, string nombre, string especialidad, string rfc, int edad, string curp, decimal salario, string puesto, string telefono, string direccion, string horario)
         {
             // Lógica de inserción en la base de datos
@@ -40,7 +41,12 @@ namespace GUARDERIA
             InitializeComponent();
         }
         SqlConnection conexion = new SqlConnection(@"server=DESKTOP-DVVAAHH\SQLEXPRESS; Initial Catalog=GUARDERIA; integrated security=true");
-
+        public class Empleado
+        {
+            public string Nombre { get; set; }
+            public int Edad { get; set; }
+            public string Puesto { get; set; }
+        }
         private void btnGuardar_Click(object sender, EventArgs e)
         {
             SqlCommand altas = new SqlCommand
@@ -77,7 +83,17 @@ namespace GUARDERIA
             txtdireccion.Clear();
             txthorario.Clear();
             txtcodigo.Focus();
-            
+
+            var empleado = new Empleado
+            {
+                Nombre = txtnombre.Text,
+                Edad = int.Parse(txtedad.Text),
+                Puesto = txtpuesto.Text
+            };
+
+            var repo = new EmpleadoRepository(); // conexión interna
+            repo.InsertarEmpleado(empleado);
+
             Form2_Load(0, e);
         }
 
@@ -176,18 +192,18 @@ namespace GUARDERIA
             SqlCommand cmdIns = new SqlCommand(baja, conexion);
 
 
-            cmdIns.Parameters.Add("ID_EMPLEADO", txtcodigo.Text);
+            cmdIns.Parameters.AddWithValue("ID_EMPLEADO", txtcodigo.Text);
 
 
             cmdIns.ExecuteNonQuery();
 
             cmdIns.Dispose();
             cmdIns = null;
-           
 
 
             conexion.Close();
             MessageBox.Show("Empleado eliminado");
+
             Form2_Load(0, e);
         }
 
