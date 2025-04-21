@@ -25,7 +25,7 @@ namespace GUARDERIA.Tests
             repo.InsertarEmpleado(empleado);
 
             // Assert
-            Assert.IsTrue(true); // Aquí puedes mejorar la validación si lees desde la BD
+            Assert.IsTrue(true); 
         }
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
@@ -44,7 +44,6 @@ namespace GUARDERIA.Tests
             // Act
             repo.InsertarEmpleado(empleado);
 
-            // Assert -> No se necesita, se espera excepción
         }
 
         [TestMethod]

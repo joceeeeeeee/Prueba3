@@ -50,36 +50,49 @@ namespace GUARDERIA
 
         private void btnGuardar_Click(object sender, EventArgs e)
         {
-            using (SqlConnection conexion = _conexion.ObtenerConexion())
+            try
             {
-                SqlCommand altas = new SqlCommand
-               ("insert into TUTOR (ID_TUTOR,NOMBRE_TUT,OCUPACION_TUT,TELEFONO_TUT,EDAD_TUT,DIRECCION_TUT) values (@ID_TUTOR,@NOMBRE_TUT,@OCUPACION_TUT,@TELEFONO_TUT,@EDAD_TUT,@DIRECCION_TUT) ", conexion);
-                // se pasan los valores de los text box a las variables temporales
-                altas.Parameters.AddWithValue("ID_TUTOR", txtcodigo.Text);
-                altas.Parameters.AddWithValue("NOMBRE_TUT", txtnombre.Text);
-                altas.Parameters.AddWithValue("OCUPACION_TUT", txtocupacion.Text);
-                altas.Parameters.AddWithValue("TELEFONO_TUT", txttelefono.Text);
-                altas.Parameters.AddWithValue("EDAD_TUT", txtedad.Text);
-                altas.Parameters.AddWithValue("DIRECCION_TUT", txtdireccion.Text);
+                using (SqlConnection conexion = _conexion.ObtenerConexion())
+                {
+                    SqlCommand altas = new SqlCommand(
+                        "INSERT INTO TUTOR (ID_TUTOR, NOMBRE_TUT, OCUPACION_TUT, TELEFONO_TUT, EDAD_TUT, DIRECCION_TUT) " +
+                        "VALUES (@ID_TUTOR, @NOMBRE_TUT, @OCUPACION_TUT, @TELEFONO_TUT, @EDAD_TUT, @DIRECCION_TUT)",
+                        conexion);
 
-                conexion.Open();// se abre la conexion
+                    // Se pasan los valores de los TextBox a los parámetros
+                    altas.Parameters.AddWithValue("@ID_TUTOR", txtcodigo.Text);
+                    altas.Parameters.AddWithValue("@NOMBRE_TUT", txtnombre.Text);
+                    altas.Parameters.AddWithValue("@OCUPACION_TUT", txtocupacion.Text);
+                    altas.Parameters.AddWithValue("@TELEFONO_TUT", txttelefono.Text);
+                    altas.Parameters.AddWithValue("@EDAD_TUT", txtedad.Text);
+                    altas.Parameters.AddWithValue("@DIRECCION_TUT", txtdireccion.Text);
 
-                altas.ExecuteNonQuery();
+                    conexion.Open(); // Se abre la conexión
+                    altas.ExecuteNonQuery(); // Se ejecuta la inserción
 
-                conexion.Close();// se cierra la conexion
-                MessageBox.Show("SE GUARDARON DATOS DEL TUTOR");
+                    MessageBox.Show("SE GUARDARON DATOS DEL TUTOR");
 
-                // limpiar los textbox
-                txtcodigo.Clear();
-                txtnombre.Clear();
-                txtocupacion.Clear();
-                txttelefono.Clear();
-                txtedad.Clear();
-                txtdireccion.Clear();
-                txtcodigo.Focus();
+                    // Limpiar los TextBox
+                    txtcodigo.Clear();
+                    txtnombre.Clear();
+                    txtocupacion.Clear();
+                    txttelefono.Clear();
+                    txtedad.Clear();
+                    txtdireccion.Clear();
+                    txtcodigo.Focus();
 
-                Form4_Load(0, e);
+                    Form4_Load(0, e);
+                }
             }
+            catch (SqlException ex)
+            {
+                MessageBox.Show("Error al guardar los datos del tutor:\n" + ex.Message, "Error SQL", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ocurrió un error inesperado:\n" + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
         }
 
         private void Form4_Load(object sender, EventArgs e)
