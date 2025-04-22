@@ -23,7 +23,7 @@ namespace GUARDERIA
                 SqlCommand altas = new SqlCommand
                     ("INSERT INTO EMPLEADO (ID_EMPLEADO, NOMBRE_EMP, ESPECIALIDAD_EMP, RFC_EMP, EDAD_EMP, CURP_EMP, SALARIO_EMP, PUESTO_EMP, TELEFONO_EMP, DIRECCION_EMP, HORARIO_EMP) " +
                      "VALUES (@ID_EMPLEADO, @NOMBRE_EMP, @ESPECIALIDAD_EMP, @RFC_EMP, @EDAD_EMP, @CURP_EMP, @SALARIO_EMP, @PUESTO_EMP, @TELEFONO_EMP, @DIRECCION_EMP, @HORARIO_EMP)", conexion);
-
+                //prueba
                 altas.Parameters.AddWithValue("@ID_EMPLEADO", codigo);
                 altas.Parameters.AddWithValue("@NOMBRE_EMP", nombre);
                 altas.Parameters.AddWithValue("@ESPECIALIDAD_EMP", especialidad);
