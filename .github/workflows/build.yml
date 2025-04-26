@@ -19,9 +19,16 @@ jobs:
           java-version: 17
           distribution: 'zulu'
 
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 0  # Para análisis más preciso
+
+      - name: Install MSBuild
+        uses: microsoft/setup-msbuild@v1.1
+
+      - name: Create sonar cache directory
+        run: New-Item -Path ~\sonar\cache -ItemType Directory -Force
 
       - name: Cache SonarQube Cloud packages
         uses: actions/cache@v4
@@ -29,6 +36,9 @@ jobs:
           path: ~\sonar\cache
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
+
+      - name: Create sonar scanner directory
+        run: New-Item -Path .\.sonar\scanner -ItemType Directory -Force
 
       - name: Cache SonarQube Cloud scanner
         id: cache-sonar-scanner
@@ -42,27 +52,13 @@ jobs:
         if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
         shell: powershell
         run: |
-          New-Item -Path .\.sonar\scanner -ItemType Directory -Force
           dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
 
-      - name: Begin SonarCloud analysis
+      - name: Build and analyze
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
         run: |
-          .\.sonar\scanner\dotnet-sonarscanner begin `
-            /k:"joceeeeeeee_Prueba3" `
-            /o:"joceeeeeeee" `
-            /d:sonar.token="${{ secrets.SONAR_TOKEN }}" `
-            /d:sonar.host.url="https://sonarcloud.io" `
-            /d:sonar.cs.opencover.reportsPaths="**/coverage.opencover.xml" `
-            /d:sonar.coverage.exclusions="**/Program.cs,**/Startup.cs,**/*.Designer.cs"
-
-      - name: Build solution
-        run: dotnet build GUARDERIA/GUARDERIA.sln
-
-      - name: End SonarCloud analysis
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        shell: powershell
-        run: .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+          .\.sonar\scanner\dotnet-sonarscanner begin /k:"joceeeeeeee_Prueba3" /o:"joceeeeeeee" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.coverage.exclusions="**/Program.cs,**/Startup.cs,**/*.Designer.cs"
+          msbuild GUARDERIA/GUARDERIA.sln /t:Rebuild /p:Configuration=Release
+          .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
