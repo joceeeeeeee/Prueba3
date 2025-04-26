@@ -59,6 +59,11 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
         run: |
-          .\.sonar\scanner\dotnet-sonarscanner begin /k:"Prueba3" /o:"joceeeeeeee" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
+          .\.sonar\scanner\dotnet-sonarscanner begin \
+            -k:"joceeeeeeee_Prueba3" \
+            -o:"joceeeeeeee" \
+            -d:sonar.token="${{ secrets.SONAR_TOKEN }}" \
+            -d:sonar.host.url="https://sonarcloud.io"
           msbuild GUARDERIA/GUARDERIA.sln /t:Rebuild /p:Configuration=Release
-          .\.sonar\scanner\dotnet-sonarscanner end
+          .\.sonar\scanner\dotnet-sonarscanner end \
+            -d:sonar.token="${{ secrets.SONAR_TOKEN }}"
