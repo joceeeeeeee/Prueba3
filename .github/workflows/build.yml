@@ -1,61 +1,66 @@
-name: Build and SonarQube Analysis
+name: SonarQube
 
 on:
   push:
     branches:
       - main
   pull_request:
-    branches:
-      - main
+    types: [opened, synchronize, reopened]
 
 jobs:
   build:
+    name: Build and analyze
     runs-on: windows-latest
 
     steps:
-      # Checkout the repository
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: 17
+          distribution: 'zulu'
 
-      # Cache SonarScanner for .NET to speed up the build
-      - name: Cache SonarScanner for .NET
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Para análisis más preciso
+
+      - name: Install MSBuild
+        uses: microsoft/setup-msbuild@v1.1
+
+      # Crear directorio de caché para sonar
+      - name: Create sonar cache directory
+        run: New-Item -Path ~\sonar\cache -ItemType Directory -Force
+
+      - name: Cache SonarQube Cloud packages
+        uses: actions/cache@v4
+        with:
+          path: ~\sonar\cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+
+      # Crear directorio para scanner
+      - name: Create sonar scanner directory
+        run: New-Item -Path .\.sonar\scanner -ItemType Directory -Force
+
+      - name: Cache SonarQube Cloud scanner
         id: cache-sonar-scanner
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
-          path: .sonar
-          key: ${{ runner.os }}-sonar-scanner-${{ hashFiles('**/*.cs') }}
-          restore-keys: |
-            ${{ runner.os }}-sonar-scanner-
+          path: .\.sonar\scanner
+          key: ${{ runner.os }}-sonar-scanner
+          restore-keys: ${{ runner.os }}-sonar-scanner
 
-      # Install .NET SDK
-      - name: Install .NET SDK
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: '6.0'
-
-      # Install SonarScanner for .NET if not cached
-      - name: Install SonarQube Scanner
+      - name: Install SonarQube Cloud scanner
         if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
+        shell: powershell
         run: |
-          dotnet tool install --tool-path .\.sonar\scanner dotnet-sonarscanner
-          dotnet tool restore
+          dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
 
-      # Run SonarQube Analysis - Begin
-      - name: Run SonarQube Analysis - Begin
+      - name: Build and analyze
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        shell: powershell
         run: |
-          .\.sonar\scanner\dotnet-sonarscanner begin /k:"your_project_key" /o:"your_org_key" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.coverage.exclusions="**/Program.cs,**/Startup.cs,**/*.Designer.cs"
-
-      # Build the solution using MSBuild
-      - name: Build the solution
-        run: |
+          .\.sonar\scanner\dotnet-sonarscanner begin /k:"Pruebas-Sonarqube_Sonar" /o:"pruebas-sonarqube" /d:sonar.token="${{ env.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.coverage.exclusions="**/Program.cs,**/Startup.cs,**/*.Designer.cs"
           msbuild GUARDERIA/GUARDERIA.sln /t:Rebuild /p:Configuration=Release
-
-      # Run SonarQube Analysis - End
-      - name: Run SonarQube Analysis - End
-        run: |
-          .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
-
-      # Post-process SonarQube results
-      - name: Post-process SonarQube results
-        run: |
-          echo "Post-processing SonarQube analysis"
+          .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ env.SONAR_TOKEN }}"
