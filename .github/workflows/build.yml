@@ -27,7 +27,6 @@ jobs:
       - name: Install MSBuild
         uses: microsoft/setup-msbuild@v1.1
 
-      # Crear directorio de caché para sonar
       - name: Create sonar cache directory
         run: New-Item -Path ~\sonar\cache -ItemType Directory -Force
 
@@ -38,7 +37,6 @@ jobs:
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
 
-      # Crear directorio para scanner
       - name: Create sonar scanner directory
         run: New-Item -Path .\.sonar\scanner -ItemType Directory -Force
 
@@ -61,6 +59,6 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
         run: |
-          .\.sonar\scanner\dotnet-sonarscanner begin /k:"Pruebas-Sonarqube_Sonar" /o:"pruebas-sonarqube" /d:sonar.token="${{ env.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.coverage.exclusions="**/Program.cs,**/Startup.cs,**/*.Designer.cs"
+          .\.sonar\scanner\dotnet-sonarscanner begin /k:"Prueba3" /o:"joceeeeeeee" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
           msbuild GUARDERIA/GUARDERIA.sln /t:Rebuild /p:Configuration=Release
-          .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ env.SONAR_TOKEN }}"
+          .\.sonar\scanner\dotnet-sonarscanner end
