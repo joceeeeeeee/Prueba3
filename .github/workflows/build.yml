@@ -13,9 +13,11 @@ jobs:
     runs-on: windows-latest
 
     steps:
+      # Checkout the repository
       - name: Checkout code
         uses: actions/checkout@v3
 
+      # Cache SonarScanner for .NET to speed up the build
       - name: Cache SonarScanner for .NET
         id: cache-sonar-scanner
         uses: actions/cache@v3
@@ -25,29 +27,35 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-sonar-scanner-
 
+      # Install .NET SDK
       - name: Install .NET SDK
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '6.0'
 
+      # Install SonarScanner for .NET if not cached
       - name: Install SonarQube Scanner
         if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
         run: |
           dotnet tool install --tool-path .\.sonar\scanner dotnet-sonarscanner
           dotnet tool restore
 
+      # Run SonarQube Analysis - Begin
       - name: Run SonarQube Analysis - Begin
         run: |
           .\.sonar\scanner\dotnet-sonarscanner begin /k:"your_project_key" /o:"your_org_key" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.coverage.exclusions="**/Program.cs,**/Startup.cs,**/*.Designer.cs"
 
+      # Build the solution using MSBuild
       - name: Build the solution
         run: |
           msbuild GUARDERIA/GUARDERIA.sln /t:Rebuild /p:Configuration=Release
 
+      # Run SonarQube Analysis - End
       - name: Run SonarQube Analysis - End
         run: |
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
 
+      # Post-process SonarQube results
       - name: Post-process SonarQube results
         run: |
           echo "Post-processing SonarQube analysis"
