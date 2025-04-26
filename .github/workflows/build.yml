@@ -1,4 +1,4 @@
-name: SonarQube
+name: SonarQube with Coverage
 
 on:
   push:
@@ -9,7 +9,7 @@ on:
 
 jobs:
   build:
-    name: Build and analyze
+    name: Build, Test and Analyze
     runs-on: windows-latest
 
     steps:
@@ -22,7 +22,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Necesario para el análisis completo en SonarCloud
+          fetch-depth: 0  # Necesario para análisis completo
 
       - name: Install MSBuild
         uses: microsoft/setup-msbuild@v1.1
@@ -39,7 +39,14 @@ jobs:
         if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
         run: dotnet tool install --tool-path .\.sonar\scanner dotnet-sonarscanner
 
-      - name: Build and analyze with SonarCloud
+      - name: Install coverlet (for coverage)
+        run: dotnet tool install --global coverlet.console
+
+      - name: Add tools to PATH
+        run: echo "$HOME/.dotnet/tools" | Out-File -FilePath $env:GITHUB_PATH -Append
+        shell: pwsh
+
+      - name: Begin SonarCloud analysis
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: pwsh
@@ -48,10 +55,24 @@ jobs:
             /k:"joceeeeeeee" `
             /o:"joceeeeeeee" `
             /d:sonar.token="${{ secrets.SONAR_TOKEN }}" `
-            /d:sonar.host.url="https://sonarcloud.io"
-          
-          msbuild GUARDERIA/GUARDERIA.sln /t:Rebuild /p:Configuration=Release
+            /d:sonar.host.url="https://sonarcloud.io" `
+            /d:sonar.cs.opencover.reportsPaths="**/coverage.opencover.xml"
 
+      - name: Build project
+        run: msbuild GUARDERIA/GUARDERIA.sln /t:Rebuild /p:Configuration=Release
+
+      - name: Run tests with coverage
+        run: dotnet test GUARDERIA.Tests/GUARDERIA.Tests.csproj `
+          --configuration Release `
+          /p:CollectCoverage=true `
+          /p:CoverletOutputFormat=opencover `
+          /p:CoverletOutput=./TestResults/coverage.opencover.xml
+
+      - name: End SonarCloud analysis
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        shell: pwsh
+        run: |
           .\.sonar\scanner\dotnet-sonarscanner end `
             /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
 
