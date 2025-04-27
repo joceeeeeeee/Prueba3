@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using System.Data.SqlClient;
 namespace GUARDERIA
 {
+    //prueba
     public partial class Form4 : Form
     {
         public Form4()
