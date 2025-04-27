@@ -113,7 +113,7 @@ namespace GUARDERIA
             SqlCommand cmdIns = new SqlCommand(baja, conexion);
 
 
-            cmdIns.Parameters.Add("ID_EXPEDIENTE", txtcodigo.Text);
+            cmdIns.Parameters.AddWithValue("ID_EXPEDIENTE", txtcodigo.Text);
 
 
             cmdIns.ExecuteNonQuery();
