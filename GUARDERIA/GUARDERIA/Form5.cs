@@ -16,7 +16,7 @@ namespace GUARDERIA
         {
             InitializeComponent();
         }
-        SqlConnection conexion = new SqlConnection(@"server=DESKTOP-DVVAAHH\SQLEXPRESS; Initial Catalog=GUARDERIA; integrated security=true");
+        SqlConnection conexion = new SqlConnection(@"server=DESKTOP-DVVAAHH\SQLEXPRESS; Initial Catalog=GUARDERIA; integrated security=true");//k
 
         private void btnGuardar_Click(object sender, EventArgs e)
         {
